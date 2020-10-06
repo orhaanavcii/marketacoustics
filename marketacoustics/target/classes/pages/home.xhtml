@@ -1,0 +1,580 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:o="http://omnifaces.org/ui" template="../content/template.xhtml"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<ui:define name="content">
+
+
+
+<h:form>
+		
+			<p:tabView>
+				
+				<p:tab title="Main" id="mainTab">
+
+
+
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<h:outputLabel style="font-weight:bold;">Target Audince Data Source :</h:outputLabel>
+						</div>
+						<div class="ui-g-3">
+							<p:selectOneMenu value="#{actionController.dataSource.id}"
+								style="width:150px">
+								<f:selectItem itemLabel="Select target" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{dataSourceController.dataSourceList}"
+									var="dat" itemValue="#{dat.id}"
+									itemLabel="#{dat.targetAudianceDataSource}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-3">
+
+							<h:outputLabel style="font-weight:bold;">Action Type :</h:outputLabel>
+						</div>
+						<div class="ui-g-3">
+							<p:selectOneMenu value="#{actionController.actionType.id}"
+								style="width:150px">
+								<f:selectItem itemLabel="Select target" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{actionTypeController.actionTypeList}"
+									var="actionType" itemValue="#{actionType.id}"
+									itemLabel="#{actionType.actionType}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<p:outputLabel style="font-weight:bold;" value="Action Code :" />
+						</div>
+						<div class="ui-g-3">
+							<p:inputText placeholder="type action code.."
+								value="#{actionController.action.actionCode}" />
+						</div>
+
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<p:outputLabel style="font-weight:bold;" value="Action Name :" />
+						</div>
+						<div class="ui-g-3">
+							<p:inputText placeholder="type action name.."
+								value="#{actionController.action.actionName}" />
+						</div>
+					</div>
+
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<p:outputLabel style="font-weight:bold;" value="Status" />
+						</div>
+						<div class="ui-g-3">
+							<p:selectBooleanCheckbox
+								value="#{actionController.action.status}" />
+							<p:outputLabel style="margin-left:5px; font-weight:bold;"
+								value="Active" />
+						</div>
+
+					</div>
+
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<p:outputLabel style="font-weight:bold;"
+								value="Validity Start Date" />
+						</div>
+						<div class="ui-g-3">
+							<p:datePicker value="#{actionController.action.validityStart}"
+								showIcon="true" />
+						</div>
+					</div>
+
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<p:outputLabel style="font-weight:bold;"
+								value="Validity End Date" />
+						</div>
+						<div class="ui-g-3">
+							<p:datePicker value="#{actionController.action.validityEnd}"
+								showIcon="true" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<p:outputLabel style="font-weight:bold;"
+								value="Max Days For Customer Action :" />
+						</div>
+						<div class="ui-g-3">
+							<p:inputText type="number"
+								value="#{actionController.action.maxTimeWindowForCustomer}"></p:inputText>
+						</div>
+					</div>
+
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<p:outputLabel style="font-weight:bold;"
+								value="Max Days For Sales Action :" />
+						</div>
+						<div class="ui-g-3">
+							<p:inputText type="number"
+								value="#{actionController.action.maxTimeWindowForSales}"></p:inputText>
+						</div>
+						<div class="ui-g-3">
+							<p:commandButton action="#{actionController.save()}"
+								update="actionTable" value="Save" process="mainTab" />
+								
+							
+						</div>
+					</div>
+					<div class="ui-g">
+
+						<p:dataTable id="actionTable" var="action" reflow="true"
+							value="#{actionController.actionList}">
+							<p:column headerText="Type">
+
+								<h:outputText value="#{action.actionType.actionType}" />
+							</p:column>
+							<p:column headerText="C.Code">
+
+								<h:outputText value="#{action.actionCode}" />
+							</p:column>
+							<p:column headerText="Campaign / Message Name">
+								<h:outputText value="#{action.actionName}" />
+							</p:column>
+							<p:column headerText="Statu">
+								<h:outputText value="#{action.status==true?'ACTIVE':'OFF'}" />
+							</p:column>
+							<p:column headerText="Start Date">
+								<h:outputText value="#{action.validityStart}" />
+							</p:column>
+							<p:column headerText="End Date">
+								<h:outputText value="#{action.validityEnd}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</div>
+				</p:tab>
+				
+
+					<p:tab title="Community" id="communityTab">
+
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<h:outputLabel style="font-weight:bold;">Target Audince Data Source :</h:outputLabel>
+							</div>
+
+							<p:selectOneMenu
+								value="#{dataSourceCommunityController.selectedDataSourceId}"
+								style="width:150px">
+								<p:ajax event="itemSelect"
+									listener="#{dataSourceCommunityController.updateCommunityList()}"
+									update="communityPickList" />
+								<f:selectItem itemLabel="Select target" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{dataSourceController.dataSourceList}"
+									var="dat" itemValue="#{dat.id}"
+									itemLabel="#{dat.targetAudianceDataSource}" />
+							</p:selectOneMenu>
+
+						</div>
+
+						<div class="ui-g">
+
+							<p:pickList style="margin-top:50px;" id="communityPickList"
+								value="#{dataSourceCommunityController.communityDualList}"
+								var="community" effect="explode" itemValue="#{community}"
+								itemLabel="#{community.communityCode}" showCheckbox="true"
+								showSourceFilter="true" showTargetFilter="true"
+								converter="#{baseDbEntityConverter}" filterMatchMode="contains"
+								responsive="true">
+								<f:facet name="sourceCaption">Community List</f:facet>
+								<f:facet name="targetCaption">Target Communities</f:facet>
+								<p:column style="width:85%;">
+									<h:outputText value="#{community.communityCode}" />
+								</p:column>
+
+							</p:pickList>
+							<p:commandButton
+								action="#{dataSourceCommunityController.save(actionController.action)}"
+								value="Save" onclick="this.disabled=true" process="communityTab"/>
+						</div>
+
+					</p:tab>
+				
+				<p:tab title="Channel" id="channelTab">
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:outputLabel
+								value="Attention,You can only use one channel per channel group !"
+								style="color:red; font-weight:bold;" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:selectBooleanCheckbox id="chbx"
+								value="#{testController.checkStatus}" />
+							<p:outputLabel style="margin-left:5px;" for="chbx"
+								value="Dynamically use clients first preferred channel" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:selectBooleanCheckbox id="chbx1"
+								value="#{testController.checkStatus}" />
+							<p:outputLabel style="margin-left:5px;" for="chbx1"
+								value="Dynamically use clients second preferred channel" />
+						</div>
+					</div>
+
+					<div class="ui-g">
+
+						<p:pickList style="margin-top:20px;" id="channelPickList"
+							value="#{channelController.channelDualList}" var="channel"
+							effect="explode" itemValue="#{channel}"
+							itemLabel="#{channel.channelName}" showCheckbox="true"
+							showSourceFilter="true" showTargetFilter="true"
+							filterMatchMode="contains" responsive="true"
+							converter="#{baseDbEntityConverter}" >
+
+							<f:facet name="sourceCaption">Channel Name</f:facet>
+							<f:facet name="targetCaption">Target Channel</f:facet>
+							<p:column style="width:85%;">
+								<h:outputText value="#{channel.channelName}" />
+							</p:column>
+				
+						</p:pickList>
+
+						<p:growl id="growl" for="channelMessage" showDetail="true" sticky="true" />
+						<p:commandButton value="save"
+							action="#{channelController.save(actionController.action)}" update="growl channelPickList" process="channelTab"/>
+					</div>
+
+				</p:tab>
+
+				<p:tab title="Dependencies">
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:selectBooleanCheckbox id="chbx2"
+								value="#{testController.checkStatus}" />
+							<p:outputLabel style="margin-left:5px;" for="chbx1"
+								value="Tanımlanan frekans içerisinde yalniz bir kez gönderilebilir." />
+						</div>
+					</div>
+
+					<div class="ui-g" style="margin-top: 30px;">
+
+						<p:dataTable var="name" value="#{testController.names}">
+							<p:column headerText="Campaign Code">
+								<h:outputText value="#{name}" />
+							</p:column>
+							<p:column headerText="Dependent Action">
+								Policy is active for 30 days
+							</p:column>
+
+						</p:dataTable>
+
+					</div>
+				</p:tab>
+
+				<p:tab title="Frequency">
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:outputLabel style="font-weight:bold;" value="Campaign Name : " />
+							<p:outputLabel style="margin-left:5px;" value="Hoşgeldin Araması" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:outputLabel value="Run Action"
+								style="margin-right:10px; font-weight:bold;" />
+							<p:selectOneMenu value="#{testController.a}"
+								style="width:200px; margin-right:10px;">
+								<p:ajax listener="#{testController.gettesty}" />
+								<f:selectItem itemLabel="Select target" itemValue="#{name}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{testController.names}" var="name" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="Start @"
+								style="margin-right:10px; font-weight:bold;" />
+							<p:selectOneMenu value="#{testController.a}" style="width:200px">
+								<p:ajax listener="#{testController.gettesty}" />
+								<f:selectItem itemLabel="Select target" itemValue="#{name}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{testController.names}" var="name" />
+							</p:selectOneMenu>
+							<p:commandButton type="submit" value="Add Frequency"
+								style="margin-left:20px; width:200px" />
+						</div>
+
+
+
+					</div>
+
+					<div class="ui-g">
+						<p:dataTable var="name" value="#{testController.names}"
+							style="margin-top:10px;">
+							<p:column headerText="Campaign Code">
+								Hoşgeldin
+							</p:column>
+							<p:column headerText="Every Week">
+								Every Week
+							</p:column>
+							<p:column headerText="Start @">
+								1
+							</p:column>
+						</p:dataTable>
+					</div>
+				</p:tab>
+
+				<p:tab title="Schedule">
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:outputLabel value="Prefered Action The Window"
+								style="font-weight:bold;" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:selectBooleanCheckbox value="#{testController.checkStatus}" />
+							<p:outputLabel style="margin-left:5px;" value="Can Run Anytime" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:selectBooleanCheckbox value="#{testController.checkStatus}" />
+							<p:outputLabel style="margin-left:5px;"
+								value="Dynamically Optimize" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:outputLabel value="Plan For Spesific Groups"
+								style="font-weight:bold; margin-right:20px;" />
+							<p:selectOneMenu value="#{testController.a}"
+								style="width:200px; margin-right:10px;">
+								<p:ajax listener="#{testController.gettesty}" />
+								<f:selectItem itemLabel="Shcedule Filter Tags..."
+									itemValue="#{name}" noSelectionOption="true" />
+								<f:selectItems value="#{testController.names}" var="name" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:outputLabel value="Action Begin"
+								style="font-weight:bold; margin-right:20px;" />
+							<p:selectOneMenu value="#{testController.a}"
+								style="width:200px; margin-right:10px;">
+								<p:ajax listener="#{testController.gettesty}" />
+								<f:selectItem itemLabel="Begin..." itemValue="#{name}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{testController.names}" var="name" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="Action Action Ends"
+								style="font-weight:bold; margin-right:20px;" />
+							<p:selectOneMenu value="#{testController.a}"
+								style="width:200px; margin-right:10px;">
+								<p:ajax listener="#{testController.gettesty}" />
+								<f:selectItem itemLabel="End..." itemValue="#{name}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{testController.names}" var="name" />
+							</p:selectOneMenu>
+							<p:commandButton type="submit" value="Add"
+								style="margin-left:20px; width:100px" />
+						</div>
+					</div>
+
+					<p:panel style="background:#eeeeee; margin-top:25px; width:700px;">
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<h:outputText value="Use Spesific Time Window"
+									style="font-weight:bold;" />
+							</div>
+
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-3"></div>
+							<div class="ui-g-9">
+								<p:outputLabel value="Start @ "
+									style="font-weight:bold; margin-right:20px;" />
+								<p:selectOneMenu value="#{testController.a}"
+									style="width:100px; margin-right:10px;">
+									<p:ajax listener="#{testController.gettesty}" />
+									<f:selectItem itemLabel="Start..." itemValue="#{name}"
+										noSelectionOption="true" />
+									<f:selectItems value="#{testController.names}" var="name" />
+								</p:selectOneMenu>
+								<p:outputLabel value="End @ "
+									style="font-weight:bold; margin-right:20px;" />
+								<p:selectOneMenu value="#{testController.a}"
+									style="width:100px; margin-right:10px;">
+									<p:ajax listener="#{testController.gettesty}" />
+									<f:selectItem itemLabel="End..." itemValue="#{name}"
+										noSelectionOption="true" />
+									<f:selectItems value="#{testController.names}" var="name" />
+								</p:selectOneMenu>
+							</div>
+
+						</div>
+					</p:panel>
+
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:dataTable var="name" value="#{testController.names}"
+								style="margin-top:10px;">
+								<p:column headerText="Rule Filters">
+								Yaşlı
+							</p:column>
+								<p:column headerText="Action Starts">
+								Morning
+							</p:column>
+								<p:column headerText="Action Ends">
+								EarlyNoon
+							</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</p:tab>
+
+				<p:tab title="Content">
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<h:outputLabel value="Channel :" style="font-weight:bold;" />
+						</div>
+						<div class="ui-g-3">
+							<p:selectOneMenu value="#{testController.a}"
+								style="width:100px; margin-right:10px;">
+								<p:ajax listener="#{testController.gettesty}" />
+								<f:selectItem itemLabel="Select Channel..." itemValue="#{name}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{testController.names}" var="name" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-3">
+							<h:outputLabel value="Persona :" style="font-weight:bold;" />
+						</div>
+						<div class="ui-g-3">
+							<p:selectOneMenu value="#{testController.a}"
+								style="width:100px; margin-right:10px;">
+								<p:ajax listener="#{testController.gettesty}" />
+								<f:selectItem itemLabel="Select Persona..." itemValue="#{name}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{testController.names}" var="name" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<h:outputLabel value="Age Group :" style="font-weight:bold;" />
+						</div>
+						<div class="ui-g-3">
+							<p:selectOneMenu value="#{testController.a}"
+								style="width:100px; margin-right:10px;">
+								<p:ajax listener="#{testController.gettesty}" />
+								<f:selectItem itemLabel="Select..." itemValue="#{name}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{testController.names}" var="name" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-3">
+							<h:outputLabel value="Life Stage :" style="font-weight:bold;" />
+						</div>
+						<div class="ui-g-3">
+							<p:selectOneMenu value="#{testController.a}"
+								style="width:100px; margin-right:10px;">
+								<p:ajax listener="#{testController.gettesty}" />
+								<f:selectItem itemLabel="Select..." itemValue="#{name}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{testController.names}" var="name" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<h:outputLabel value="Content Link :" style="font-weight:bold;" />
+						</div>
+						<div class="ui-g-3">
+							<p:inputText />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h:outputLabel style="font-weight:bold;"
+								value="*You can use dynamic variables in the content link to create dynamic content" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<h:outputLabel style="font-weight:bold;" value="Basic Content" />
+						</div>
+						<div class="ui-g-4"></div>
+						<div class="ui-g-4">
+							<p:commandButton value="Preview Content" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:inputTextarea rows="6" cols="105" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h:outputLabel style="font-weight:bold;"
+								value="For customer name use (name) for fullname use (fullname), for surname (surname) for full list of tags please click." />
+						</div>
+					</div>
+
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:dataTable var="name" value="#{testController.names}"
+								style="margin-top:10px;">
+								<p:column headerText="Channel">
+								SMS
+							</p:column>
+								<p:column headerText="Persona">
+								ALL
+							</p:column>
+								<p:column headerText="Age">
+								Age
+							</p:column>
+								<p:column headerText="Life Stage">
+								ALL
+							</p:column>
+								<p:column headerText="Content Link">
+								Https://.....
+							</p:column>
+								<p:column headerText="Preview">
+
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</p:tab>
+
+			</p:tabView>
+		
+</h:form>
+
+
+
+
+
+
+
+
+
+
+	</ui:define>
+
+
+</ui:composition>
