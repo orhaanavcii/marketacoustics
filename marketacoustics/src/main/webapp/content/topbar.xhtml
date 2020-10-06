@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pa="http://primefaces.org/paradise">
+
+	<div class="topbar">
+		<h:link styleClass="topbar-logo">
+			<p:graphicImage name="jforce.jpg" style="border: 0px;"
+				library="images" />
+		</h:link>
+
+		<a href="#" id="menu-button"> <i class="fa fa-bars"></i>
+		</a> <a href="#" id="user-display"> <span class="username"></span>
+			<p:graphicImage name="images/avatar.png" library="paradise-layout" rendered="false"
+				style="border: 0px;" /> <i class="fa fa-angle-down" style="display:none;"></i>
+		</a> <label for="topbar-search"> <i style="display:none;"
+			class="fa fa-search topbar-search-icon"></i>
+		</label> <input type="text" class="topbar-search"
+			placeholder="Type your search here" id="topbar-search" />
+
+		<ul id="topbar-menu" class="fadeInDown animated">
+			<li><a href="#"> <i class="topbar-icon fa fa-fw fa-user"></i>
+					<span class="topbar-item-name">Profile</span>
+			</a></li>
+			<li><i
+					class="topbar-icon fa fa-fw fa-cog"></i> 
+			</li>
+
+			<li></li>
+
+		</ul>
+	</div>
+
+</ui:composition>
