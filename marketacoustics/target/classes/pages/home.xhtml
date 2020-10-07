@@ -13,10 +13,10 @@
 
 
 
-<h:form>
-		
+		<h:form>
+
 			<p:tabView>
-				
+
 				<p:tab title="Main" id="mainTab">
 
 
@@ -128,8 +128,8 @@
 						<div class="ui-g-3">
 							<p:commandButton action="#{actionController.save()}"
 								update="actionTable" value="Save" process="mainTab" />
-								
-							
+
+
 						</div>
 					</div>
 					<div class="ui-g">
@@ -161,53 +161,53 @@
 
 					</div>
 				</p:tab>
-				
 
-					<p:tab title="Community" id="communityTab">
 
-						<div class="ui-g">
-							<div class="ui-g-3">
-								<h:outputLabel style="font-weight:bold;">Target Audince Data Source :</h:outputLabel>
-							</div>
+				<p:tab title="Community" id="communityTab">
 
-							<p:selectOneMenu
-								value="#{dataSourceCommunityController.selectedDataSourceId}"
-								style="width:150px">
-								<p:ajax event="itemSelect"
-									listener="#{dataSourceCommunityController.updateCommunityList()}"
-									update="communityPickList" />
-								<f:selectItem itemLabel="Select target" itemValue=""
-									noSelectionOption="true" />
-								<f:selectItems value="#{dataSourceController.dataSourceList}"
-									var="dat" itemValue="#{dat.id}"
-									itemLabel="#{dat.targetAudianceDataSource}" />
-							</p:selectOneMenu>
-
+					<div class="ui-g">
+						<div class="ui-g-3">
+							<h:outputLabel style="font-weight:bold;">Target Audince Data Source :</h:outputLabel>
 						</div>
 
-						<div class="ui-g">
+						<p:selectOneMenu
+							value="#{dataSourceCommunityController.selectedDataSourceId}"
+							style="width:150px">
+							<p:ajax event="itemSelect"
+								listener="#{dataSourceCommunityController.updateCommunityList()}"
+								update="communityPickList" />
+							<f:selectItem itemLabel="Select target" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{dataSourceController.dataSourceList}"
+								var="dat" itemValue="#{dat.id}"
+								itemLabel="#{dat.targetAudianceDataSource}" />
+						</p:selectOneMenu>
 
-							<p:pickList style="margin-top:50px;" id="communityPickList"
-								value="#{dataSourceCommunityController.communityDualList}"
-								var="community" effect="explode" itemValue="#{community}"
-								itemLabel="#{community.communityCode}" showCheckbox="true"
-								showSourceFilter="true" showTargetFilter="true"
-								converter="#{baseDbEntityConverter}" filterMatchMode="contains"
-								responsive="true">
-								<f:facet name="sourceCaption">Community List</f:facet>
-								<f:facet name="targetCaption">Target Communities</f:facet>
-								<p:column style="width:85%;">
-									<h:outputText value="#{community.communityCode}" />
-								</p:column>
+					</div>
 
-							</p:pickList>
-							<p:commandButton
-								action="#{dataSourceCommunityController.save(actionController.action)}"
-								value="Save" onclick="this.disabled=true" process="communityTab"/>
-						</div>
+					<div class="ui-g">
 
-					</p:tab>
-				
+						<p:pickList style="margin-top:50px;" id="communityPickList"
+							value="#{dataSourceCommunityController.communityDualList}"
+							var="community" effect="explode" itemValue="#{community}"
+							itemLabel="#{community.communityCode}" showCheckbox="true"
+							showSourceFilter="true" showTargetFilter="true"
+							converter="#{baseDbEntityConverter}" filterMatchMode="contains"
+							responsive="true">
+							<f:facet name="sourceCaption">Community List</f:facet>
+							<f:facet name="targetCaption">Target Communities</f:facet>
+							<p:column style="width:85%;">
+								<h:outputText value="#{community.communityCode}" />
+							</p:column>
+
+						</p:pickList>
+						<p:commandButton
+							action="#{dataSourceCommunityController.save(actionController.action)}"
+							value="Save" onclick="this.disabled=true" process="communityTab" />
+					</div>
+
+				</p:tab>
+
 				<p:tab title="Channel" id="channelTab">
 					<div class="ui-g">
 						<div class="ui-g-12">
@@ -241,19 +241,21 @@
 							itemLabel="#{channel.channelName}" showCheckbox="true"
 							showSourceFilter="true" showTargetFilter="true"
 							filterMatchMode="contains" responsive="true"
-							converter="#{baseDbEntityConverter}" >
+							converter="#{baseDbEntityConverter}">
 
 							<f:facet name="sourceCaption">Channel Name</f:facet>
 							<f:facet name="targetCaption">Target Channel</f:facet>
 							<p:column style="width:85%;">
 								<h:outputText value="#{channel.channelName}" />
 							</p:column>
-				
+
 						</p:pickList>
 
-						<p:growl id="growl" for="channelMessage" showDetail="true" sticky="true" />
+						<p:growl id="growl" for="channelMessage" showDetail="true"
+							sticky="true" />
 						<p:commandButton value="save"
-							action="#{channelController.save(actionController.action)}" update="growl channelPickList" process="channelTab"/>
+							action="#{channelController.save(actionController.action)}"
+							update="growl channelPickList" process="channelTab" />
 					</div>
 
 				</p:tab>
@@ -287,48 +289,56 @@
 					<div class="ui-g">
 						<div class="ui-g-12">
 							<p:outputLabel style="font-weight:bold;" value="Campaign Name : " />
-							<p:outputLabel style="margin-left:5px;" value="Hoşgeldin Araması" />
+							<p:outputLabel style="margin-left:5px;"
+								value="#{actionController.action.actionName}" />
 						</div>
 					</div>
 					<div class="ui-g">
 						<div class="ui-g-12">
-							<p:outputLabel value="Run Action"
+							<p:outputLabel value="Run Action This Period"
 								style="margin-right:10px; font-weight:bold;" />
-							<p:selectOneMenu value="#{testController.a}"
+							<p:selectOneMenu
+								value="#{frequencyController.frequency.frequencyPeriod}"
 								style="width:200px; margin-right:10px;">
-								<p:ajax listener="#{testController.gettesty}" />
-								<f:selectItem itemLabel="Select target" itemValue="#{name}"
+								<f:selectItem itemLabel="Select period" itemValue=""
 									noSelectionOption="true" />
-								<f:selectItems value="#{testController.names}" var="name" />
+								<f:selectItems
+									value="#{frequencyController.frequencyPeriodList}" var="period" />
 							</p:selectOneMenu>
 
 							<p:outputLabel value="Start @"
 								style="margin-right:10px; font-weight:bold;" />
-							<p:selectOneMenu value="#{testController.a}" style="width:200px">
-								<p:ajax listener="#{testController.gettesty}" />
-								<f:selectItem itemLabel="Select target" itemValue="#{name}"
+							<p:selectOneMenu
+								value="#{frequencyController.frequency.repeatNo}"
+								style="width:200px; margin-right:10px;">
+								<f:selectItem itemLabel="Select period" itemValue=""
 									noSelectionOption="true" />
-								<f:selectItems value="#{testController.names}" var="name" />
+								<f:selectItems value="#{frequencyController.frequencyStartList}"
+									var="start" />
 							</p:selectOneMenu>
-							<p:commandButton type="submit" value="Add Frequency"
-								style="margin-left:20px; width:200px" />
+							<p:commandButton value="Add Frequency"
+								style="margin-left:20px; width:200px"
+								update="frequencyDataTable"
+								action="#{frequencyController.save(actionController.action)}" disabled="#{frequencyController.isDisabled}" />
+
+
+
+
 						</div>
-
-
-
 					</div>
 
 					<div class="ui-g">
-						<p:dataTable var="name" value="#{testController.names}"
+						<p:dataTable id="frequencyDataTable" var="frequency"
+							value="#{frequencyController.frequencyList}"
 							style="margin-top:10px;">
-							<p:column headerText="Campaign Code">
-								Hoşgeldin
+							<p:column headerText="Campaign Name">
+								<p:outputLabel value="#{frequency.action.actionName}" />
 							</p:column>
-							<p:column headerText="Every Week">
-								Every Week
+							<p:column headerText="Period">
+								<p:outputLabel value="#{frequency.frequencyPeriod}" />
 							</p:column>
-							<p:column headerText="Start @">
-								1
+							<p:column headerText="Repeat @">
+								<p:outputLabel value="#{frequency.repeatNo}" />
 							</p:column>
 						</p:dataTable>
 					</div>
@@ -562,8 +572,8 @@
 				</p:tab>
 
 			</p:tabView>
-		
-</h:form>
+
+		</h:form>
 
 
 
