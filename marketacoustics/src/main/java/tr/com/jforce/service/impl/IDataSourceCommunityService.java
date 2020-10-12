@@ -22,7 +22,23 @@ public class IDataSourceCommunityService implements DataSourceCommunityService {
 
 	@Override
 	public List<DataSourceCommunity> findByTargetAudianceDataSourceId(Long id) {
-		return this.dataSourceCommunityRepository.findByTargetAudianceDataSourceId(id);
+		return this.dataSourceCommunityRepository.findDataSourceCommunityByTargetAudianceDataSourceId(id);
+	}
+
+	@Override
+	public DataSourceCommunity addDataSourceCommunity(DataSourceCommunity dataSourceCommunity) {
+		return this.dataSourceCommunityRepository.save(dataSourceCommunity);
+	}
+
+	@Override
+	public void deleteDataSourceCommunity(Long id) {
+		this.dataSourceCommunityRepository.deleteById(id);
+		
+	}
+
+	@Override
+	public List<DataSourceCommunity> findAll() {
+		return this.dataSourceCommunityRepository.findAll();
 	}
 
 }

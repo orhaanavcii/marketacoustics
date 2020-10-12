@@ -1,11 +1,14 @@
 package tr.com.jforce.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -26,11 +29,11 @@ public class DataSourceCommunity extends BaseDbEntity {
 	@OneToOne(optional = true , fetch = FetchType.LAZY)
 	private JFClient client;
 	
-	@JoinColumn(name = "targetAuidanceDataSourceId")
+	@JoinColumn(name = "targetAuidanceDataSourceId", unique = true)
 	@OneToOne(fetch = FetchType.LAZY)
 	private DataSource targetAudianceDataSource;
 	
-	@JoinColumn(name = "communityId")
-	@OneToOne(fetch = FetchType.LAZY)
-	private Community community;
+	@JoinColumn(name = "communityId", unique = true)
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Community> communityList;
 }

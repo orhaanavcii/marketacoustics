@@ -31,4 +31,15 @@ public class IChannelService implements ChannelService{
 		return this.channelRespository.findAll();
 	}
 
+	@Override
+	public Channel saveChannel(Channel channel) {
+		return this.channelRespository.save(channel);
+	}
+
+	@Override
+	public void deleteChannel(Long id) {
+		this.channelRespository.deleteById(id);
+		
+	}
+
 }

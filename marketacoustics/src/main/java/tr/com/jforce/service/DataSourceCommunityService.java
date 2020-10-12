@@ -11,5 +11,8 @@ import tr.com.jforce.entity.DataSourceCommunity;
 public interface DataSourceCommunityService {
 	
 	List<DataSourceCommunity> findByTargetAudianceDataSourceId(Long id);
+	DataSourceCommunity addDataSourceCommunity(DataSourceCommunity dataSourceCommunity);
+	void deleteDataSourceCommunity(Long id);
+	List<DataSourceCommunity> findAll();
 
 }

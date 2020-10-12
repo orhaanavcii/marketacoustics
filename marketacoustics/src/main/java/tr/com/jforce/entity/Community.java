@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -28,6 +29,10 @@ public class Community extends BaseDbEntity {
 	
 	@Column(name = "communityCode")
 	private String communityCode;
+	
+	@JoinColumn(name = "communityGroupId")
+	@OneToOne(optional = true , fetch = FetchType.LAZY)
+	private CommunityGroup communityGroup;
 	
 	@JoinColumn(name = "clientId")
 	@OneToOne(optional = true , fetch = FetchType.LAZY)

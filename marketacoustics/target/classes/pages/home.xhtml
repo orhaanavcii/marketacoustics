@@ -13,21 +13,23 @@
 
 
 
-		<h:form>
-
-			<p:tabView>
-
-				<p:tab title="Main" id="mainTab">
 
 
+		<p:tabView>
+			<p:ajax event="tabChange"
+				update="frequency main community channel dependencies dependenciesV2" />
+			<p:tab title="Main" id="mainTab">
 
+				<h:form id="main">
+					<p:messages id="msgs" />
 					<div class="ui-g">
 						<div class="ui-g-3">
 							<h:outputLabel style="font-weight:bold;">Target Audince Data Source :</h:outputLabel>
 						</div>
 						<div class="ui-g-3">
-							<p:selectOneMenu value="#{actionController.dataSource.id}"
-								style="width:150px">
+							<p:selectOneMenu label="Target Audince Data Source"
+								value="#{actionController.dataSource.id}" style="width:150px"
+								required="true">
 								<f:selectItem itemLabel="Select target" itemValue=""
 									noSelectionOption="true" />
 								<f:selectItems value="#{dataSourceController.dataSourceList}"
@@ -40,8 +42,8 @@
 							<h:outputLabel style="font-weight:bold;">Action Type :</h:outputLabel>
 						</div>
 						<div class="ui-g-3">
-							<p:selectOneMenu value="#{actionController.actionType.id}"
-								style="width:150px">
+							<p:selectOneMenu label="Action Type" required="true"
+								value="#{actionController.actionType.id}" style="width:150px">
 								<f:selectItem itemLabel="Select target" itemValue=""
 									noSelectionOption="true" />
 								<f:selectItems value="#{actionTypeController.actionTypeList}"
@@ -56,8 +58,11 @@
 							<p:outputLabel style="font-weight:bold;" value="Action Code :" />
 						</div>
 						<div class="ui-g-3">
-							<p:inputText placeholder="type action code.."
-								value="#{actionController.action.actionCode}" />
+							<p:inputText label="Action Code" required="true"
+								placeholder="type action code.."
+								value="#{actionController.action.actionCode}">
+								<f:validateLength minimum="3" maximum="10" />
+							</p:inputText>
 						</div>
 
 					</div>
@@ -66,14 +71,18 @@
 							<p:outputLabel style="font-weight:bold;" value="Action Name :" />
 						</div>
 						<div class="ui-g-3">
-							<p:inputText placeholder="type action name.."
-								value="#{actionController.action.actionName}" />
+							<p:inputText label="Action Name" required="true"
+								placeholder="type action name.."
+								value="#{actionController.action.actionName}">
+								<f:validateLength minimum="3" maximum="15" />
+							</p:inputText>
 						</div>
 					</div>
 
 					<div class="ui-g">
 						<div class="ui-g-3">
-							<p:outputLabel style="font-weight:bold;" value="Status" />
+							<p:outputLabel required="true" style="font-weight:bold;"
+								value="Status" />
 						</div>
 						<div class="ui-g-3">
 							<p:selectBooleanCheckbox
@@ -90,8 +99,8 @@
 								value="Validity Start Date" />
 						</div>
 						<div class="ui-g-3">
-							<p:datePicker value="#{actionController.action.validityStart}"
-								showIcon="true" />
+							<p:datePicker required="true"
+								value="#{actionController.action.validityStart}" showIcon="true" />
 						</div>
 					</div>
 
@@ -101,8 +110,8 @@
 								value="Validity End Date" />
 						</div>
 						<div class="ui-g-3">
-							<p:datePicker value="#{actionController.action.validityEnd}"
-								showIcon="true" />
+							<p:datePicker required="true"
+								value="#{actionController.action.validityEnd}" showIcon="true" />
 						</div>
 					</div>
 					<div class="ui-g">
@@ -111,7 +120,7 @@
 								value="Max Days For Customer Action :" />
 						</div>
 						<div class="ui-g-3">
-							<p:inputText type="number"
+							<p:inputText required="true" type="number"
 								value="#{actionController.action.maxTimeWindowForCustomer}"></p:inputText>
 						</div>
 					</div>
@@ -122,12 +131,13 @@
 								value="Max Days For Sales Action :" />
 						</div>
 						<div class="ui-g-3">
-							<p:inputText type="number"
+							<p:inputText required="true" type="number"
 								value="#{actionController.action.maxTimeWindowForSales}"></p:inputText>
 						</div>
 						<div class="ui-g-3">
 							<p:commandButton action="#{actionController.save()}"
-								update="actionTable" value="Save" process="mainTab" />
+								update="main" value="Save"
+								disabled="#{actionController.isDisabled}" />
 
 
 						</div>
@@ -160,10 +170,14 @@
 						</p:dataTable>
 
 					</div>
-				</p:tab>
+					<p:growl id="growlMain" for="mainSuccess" showDetail="true"
+						life="4000" />
+				</h:form>
+			</p:tab>
 
 
-				<p:tab title="Community" id="communityTab">
+			<p:tab title="Community" id="communityTab">
+				<h:form id="community">
 
 					<div class="ui-g">
 						<div class="ui-g-3">
@@ -203,12 +217,15 @@
 						</p:pickList>
 						<p:commandButton
 							action="#{dataSourceCommunityController.save(actionController.action)}"
-							value="Save" onclick="this.disabled=true" process="communityTab" />
+							value="Save"
+							disabled="#{dataSourceCommunityController.isDisabled}"
+							update="community" />
 					</div>
+				</h:form>
+			</p:tab>
 
-				</p:tab>
-
-				<p:tab title="Channel" id="channelTab">
+			<p:tab title="Channel" id="channelTab">
+				<h:form id="channel">
 					<div class="ui-g">
 						<div class="ui-g-12">
 							<p:outputLabel
@@ -252,20 +269,22 @@
 						</p:pickList>
 
 						<p:growl id="growl" for="channelMessage" showDetail="true"
-							sticky="true" />
+							sticky="true" life="2000" />
 						<p:commandButton value="save"
 							action="#{channelController.save(actionController.action)}"
-							update="growl channelPickList" process="channelTab" />
+							update="growl channelPickList channel" ajax="true"
+							disabled="#{channelController.isDisabled}" />
 					</div>
+				</h:form>
+			</p:tab>
 
-				</p:tab>
-
-				<p:tab title="Dependencies">
+			<p:tab title="Dependencies">
+				<h:form id="dependencies">
 					<div class="ui-g">
 						<div class="ui-g-12">
 							<p:selectBooleanCheckbox id="chbx2"
 								value="#{testController.checkStatus}" />
-							<p:outputLabel style="margin-left:5px;" for="chbx1"
+							<p:outputLabel style="margin-left:5px;"
 								value="Tanımlanan frekans içerisinde yalniz bir kez gönderilebilir." />
 						</div>
 					</div>
@@ -283,9 +302,13 @@
 						</p:dataTable>
 
 					</div>
-				</p:tab>
 
-				<p:tab title="Frequency">
+				</h:form>
+			</p:tab>
+
+			<p:tab title="Frequency">
+
+				<h:form id="frequency">
 					<div class="ui-g">
 						<div class="ui-g-12">
 							<p:outputLabel style="font-weight:bold;" value="Campaign Name : " />
@@ -300,7 +323,7 @@
 							<p:selectOneMenu
 								value="#{frequencyController.frequency.frequencyPeriod}"
 								style="width:200px; margin-right:10px;">
-								<f:selectItem itemLabel="Select period" itemValue=""
+								<f:selectItem itemLabel="Select Period..." itemValue=""
 									noSelectionOption="true" />
 								<f:selectItems
 									value="#{frequencyController.frequencyPeriodList}" var="period" />
@@ -311,7 +334,7 @@
 							<p:selectOneMenu
 								value="#{frequencyController.frequency.repeatNo}"
 								style="width:200px; margin-right:10px;">
-								<f:selectItem itemLabel="Select period" itemValue=""
+								<f:selectItem itemLabel="Select Period..." itemValue=""
 									noSelectionOption="true" />
 								<f:selectItems value="#{frequencyController.frequencyStartList}"
 									var="start" />
@@ -319,7 +342,7 @@
 							<p:commandButton value="Add Frequency"
 								style="margin-left:20px; width:200px"
 								update="frequencyDataTable"
-								action="#{frequencyController.save(actionController.action)}" disabled="#{frequencyController.isDisabled}" />
+								action="#{frequencyController.save(actionController.action)}" />
 
 
 
@@ -342,9 +365,12 @@
 							</p:column>
 						</p:dataTable>
 					</div>
-				</p:tab>
+				</h:form>
 
-				<p:tab title="Schedule">
+			</p:tab>
+
+			<p:tab title="Schedule">
+				<h:form id="schedule">
 					<div class="ui-g">
 						<div class="ui-g-12">
 							<p:outputLabel value="Prefered Action The Window"
@@ -371,37 +397,37 @@
 							<p:selectOneMenu value="#{testController.a}"
 								style="width:200px; margin-right:10px;">
 								<p:ajax listener="#{testController.gettesty}" />
-								<f:selectItem itemLabel="Shcedule Filter Tags..."
-									itemValue="#{name}" noSelectionOption="true" />
+								<f:selectItem itemLabel="Shcedule Filter Tags..." itemValue=""
+									noSelectionOption="true" />
 								<f:selectItems value="#{testController.names}" var="name" />
 							</p:selectOneMenu>
 						</div>
 					</div>
-					<div class="ui-g">
-						<div class="ui-g-12">
-							<p:outputLabel value="Action Begin"
-								style="font-weight:bold; margin-right:20px;" />
-							<p:selectOneMenu value="#{testController.a}"
-								style="width:200px; margin-right:10px;">
-								<p:ajax listener="#{testController.gettesty}" />
-								<f:selectItem itemLabel="Begin..." itemValue="#{name}"
-									noSelectionOption="true" />
-								<f:selectItems value="#{testController.names}" var="name" />
-							</p:selectOneMenu>
+					<!-- 					<div class="ui-g"> -->
+					<!-- 						<div class="ui-g-12"> -->
+					<!-- 							<p:outputLabel value="Action Begin" -->
+					<!-- 								style="font-weight:bold; margin-right:20px;" /> -->
+					<!-- 							<p:selectOneMenu value="#{testController.a}" -->
+					<!-- 								style="width:200px; margin-right:10px;"> -->
+					<!-- 								<p:ajax listener="#{testController.gettesty}" /> -->
+					<!-- 								<f:selectItem itemLabel="Begin..." itemValue="#{name}" -->
+					<!-- 									noSelectionOption="true" /> -->
+					<!-- 								<f:selectItems value="#{testController.names}" var="name" /> -->
+					<!-- 							</p:selectOneMenu> -->
 
-							<p:outputLabel value="Action Action Ends"
-								style="font-weight:bold; margin-right:20px;" />
-							<p:selectOneMenu value="#{testController.a}"
-								style="width:200px; margin-right:10px;">
-								<p:ajax listener="#{testController.gettesty}" />
-								<f:selectItem itemLabel="End..." itemValue="#{name}"
-									noSelectionOption="true" />
-								<f:selectItems value="#{testController.names}" var="name" />
-							</p:selectOneMenu>
-							<p:commandButton type="submit" value="Add"
-								style="margin-left:20px; width:100px" />
-						</div>
-					</div>
+					<!-- 							<p:outputLabel value="Action Action Ends" -->
+					<!-- 								style="font-weight:bold; margin-right:20px;" /> -->
+					<!-- 							<p:selectOneMenu value="#{testController.a}" -->
+					<!-- 								style="width:200px; margin-right:10px;"> -->
+					<!-- 								<p:ajax listener="#{testController.gettesty}" /> -->
+					<!-- 								<f:selectItem itemLabel="End..." itemValue="#{name}" -->
+					<!-- 									noSelectionOption="true" /> -->
+					<!-- 								<f:selectItems value="#{testController.names}" var="name" /> -->
+					<!-- 							</p:selectOneMenu> -->
+					<!-- 							<p:commandButton type="submit" value="Add" -->
+					<!-- 								style="margin-left:20px; width:100px" /> -->
+					<!-- 						</div> -->
+					<!-- 					</div> -->
 
 					<p:panel style="background:#eeeeee; margin-top:25px; width:700px;">
 						<div class="ui-g">
@@ -412,50 +438,73 @@
 
 						</div>
 						<div class="ui-g">
-							<div class="ui-g-3"></div>
-							<div class="ui-g-9">
-								<p:outputLabel value="Start @ "
+							<div class="ui-g-12">
+								<p:outputLabel value="Periods @"
 									style="font-weight:bold; margin-right:20px;" />
-								<p:selectOneMenu value="#{testController.a}"
-									style="width:100px; margin-right:10px;">
-									<p:ajax listener="#{testController.gettesty}" />
-									<f:selectItem itemLabel="Start..." itemValue="#{name}"
-										noSelectionOption="true" />
-									<f:selectItems value="#{testController.names}" var="name" />
-								</p:selectOneMenu>
+								<p:datePicker id="multiselect" selectionMode="multiple"
+									value="#{scheduleController.schedule.dates}"
+									readonlyInput="true" />
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-6">
+								<p:outputLabel value="Start @ "
+									style="font-weight:bold; margin-right:33px;" />
+								<p:datePicker id="timeonly"
+									value="#{scheduleController.startTime}" timeOnly="true"
+									pattern="HH:mm" />
+							</div>
+							<div class="ui-g-6">
+
 								<p:outputLabel value="End @ "
 									style="font-weight:bold; margin-right:20px;" />
-								<p:selectOneMenu value="#{testController.a}"
-									style="width:100px; margin-right:10px;">
-									<p:ajax listener="#{testController.gettesty}" />
-									<f:selectItem itemLabel="End..." itemValue="#{name}"
-										noSelectionOption="true" />
-									<f:selectItems value="#{testController.names}" var="name" />
-								</p:selectOneMenu>
-							</div>
+								<p:datePicker id="timeonly2"
+									value="#{scheduleController.endTime}" timeOnly="true"
+									pattern="HH:mm" />
 
+							</div>
 						</div>
+						<div class="ui-g">
+							<div class="ui-g-10"></div>
+							<p:commandButton value="Save Schedule"
+								action="#{scheduleController.save(frequencyController.frequency)}"
+								update="scheduleTable" />
+						</div>
+
 					</p:panel>
+
+
 
 					<div class="ui-g">
 						<div class="ui-g-12">
-							<p:dataTable var="name" value="#{testController.names}"
-								style="margin-top:10px;">
+							<p:dataTable var="name"
+								value="#{frequencyController.frequencyList}"
+								style="margin-top:10px;" id="scheduleTable">
 								<p:column headerText="Rule Filters">
-								Yaşlı
-							</p:column>
+									<p:outputLabel />
+								</p:column>
+
+								<p:column headerText="Dates">
+									<ui:repeat value="#{scheduleController.dates}" var="date">
+										<h:outputText value="#{date} " />
+									</ui:repeat>
+								</p:column>
 								<p:column headerText="Action Starts">
-								Morning
-							</p:column>
+									<p:outputLabel value="#{scheduleController.schedule.startTime}" />
+
+								</p:column>
 								<p:column headerText="Action Ends">
-								EarlyNoon
-							</p:column>
+									<p:outputLabel value="#{scheduleController.schedule.endTime}" />
+
+								</p:column>
 							</p:dataTable>
 						</div>
 					</div>
-				</p:tab>
+				</h:form>
+			</p:tab>
 
-				<p:tab title="Content">
+			<p:tab title="Content">
+				<h:form id="content">
 					<div class="ui-g">
 						<div class="ui-g-3">
 							<h:outputLabel value="Channel :" style="font-weight:bold;" />
@@ -569,16 +618,92 @@
 							</p:dataTable>
 						</div>
 					</div>
-				</p:tab>
+				</h:form>
+			</p:tab>
 
-			</p:tabView>
+			<p:tab title="Dependencies V2">
+				<h:form id="dependenciesV2">
+					<div class="ui-g">
+						<div class="ui-g-8 ui-g-offset-4">
+							<h2>Action Filters</h2>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-3 ui-g-offset-1">
+							<h3>Raw Data / Communities</h3>
+						</div>
+						<div class="ui-g-4 ui-g-offset-2">
+							<p:outputLabel style="margin-right:15px;" value="Rule Filter" />
+							<p:inputText />
+						</div>
+						<div class="ui-g-3"></div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-3 ui-g-offset-1">
+							<p:selectManyMenu converter="#{selectManyMenuConverter}" id="rawCommunity"
+								value="#{dependenciesController.targetCommunityList}"
+								filter="true" filterMatchMode="contains" showCheckbox="true"
+								style="width:180px;">
+								<f:selectItems
+									value="#{dependenciesController.sourceCommunityList}" var="c"
+									itemLabel="#{c.communityCode}" itemValue="#{c}" />
+								<p:column>
+									<h:outputText value="#{c.communityCode}" />
+								</p:column>
+							</p:selectManyMenu>
 
-		</h:form>
 
+						</div>
+						<div class="ui-g-3">
 
+							<p:selectOneMenu value="#{dependenciesController.isAndOr}"
+								style="width:150px">
+								<f:selectItem itemLabel="AND / OR" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{dependenciesController.andOr}" />
+							</p:selectOneMenu>
 
+							<p:commandButton value="Push" update="dependenciesV2 dependTable"
+								style="margin-right:20px; margin-top:10px; margin-bottom:10px; width:100px;"
+								title="Icon Only" icon="pi pi-arrow-right" action="#{dependenciesController.pushData()}"> 
+							</p:commandButton>
 
+							<p:selectOneMenu value="#{dependenciesController.isInOut}"
+								style="width:150px">
+								<f:selectItem itemLabel="IN / OUT" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{dependenciesController.inOut}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-5">
 
+							<p:dataTable id="dependTable" var="datas"
+								value="#{dependenciesController.dependenciesCommunityRawDatas}"
+								style="margin-top:10px;">
+								<p:column headerText="AND / OR">
+									<p:outputLabel value="#{datas.andOr}" />
+								</p:column>
+								<p:column headerText="IN / OUT">
+									<p:outputLabel value="#{datas.inOut}" />
+								</p:column>
+								<p:column headerText="Rule Community">
+									<p:outputLabel value="#{datas.data}" />
+								</p:column>
+							</p:dataTable>
+
+						</div>
+
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-4"></div>
+						<div class="ui-g-4"></div>
+						<div class="ui-g-4"></div>
+					</div>
+
+				</h:form>
+			</p:tab>
+
+		</p:tabView>
 
 
 

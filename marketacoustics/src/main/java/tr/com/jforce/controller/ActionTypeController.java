@@ -8,15 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import lombok.Data;
 import tr.com.jforce.entity.ActionType;
 import tr.com.jforce.service.ActionTypeService;
 
 @Scope("view")
 @Component(value = "actionTypeController")
+@Data
 public class ActionTypeController {
 
 	private final ActionTypeService actionTypeService;
 	private List<ActionType> actionTypeList;
+	private ActionType actionType;
 	
 	@Autowired
 	public ActionTypeController( ActionTypeService actionTypeService) {
@@ -25,23 +28,27 @@ public class ActionTypeController {
 	
 	@PostConstruct
 	public void init() {
+		dataPreparation();
+		findAll();
+	}
+
+	public void dataPreparation() {
+		this.actionType = new ActionType();
+	}
+
+	public void findAll() {
 		this.actionTypeList = this.actionTypeService.findAll();
 	}
 	
-
-	public List<ActionType> getActionTypeList() {
-		return actionTypeList;
-	}
-
-	public void setActionTypeList(List<ActionType> actionTypeList) {
-		this.actionTypeList = actionTypeList;
-	}
-
-	public ActionTypeService getActionTypeService() {
-		return actionTypeService;
+	public void saveActionType() {
+		this.actionTypeService.saveActionType(actionType);
+		findAll();
+		this.actionType.setActionType("");
 	}
 	
-	
-	
+	public void deleteActionType(Long id) {
+		this.actionTypeService.deleteActionType(id);
+		findAll();
+	}
 	
 }

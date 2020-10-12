@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import lombok.Getter;
 import lombok.Setter;
 import tr.com.jforce.entity.Community;
+import tr.com.jforce.entity.CommunityGroup;
 import tr.com.jforce.service.CommunityService;
 
 
@@ -31,6 +32,9 @@ public class CommunityController {
 	private DualListModel<Community> dualCommunityList;
 	private List<Community> sourceCommunityList;
 	private List<Community> targetCommunityList = new ArrayList<Community>();
+	private Community community;
+	private CommunityGroup communityGroup;
+	private String comGroupId;
 	
 	@Autowired
 	public CommunityController(CommunityService communityService) {
@@ -40,8 +44,9 @@ public class CommunityController {
 	
 	@PostConstruct
 	public void init() {
-		
-		this.sourceCommunityList = findAll();
+		this.communityGroup = new CommunityGroup();
+		this.community = new Community();
+		updateCommunityList();
 		this.dualCommunityList = new DualListModel<Community>(this.sourceCommunityList, this.targetCommunityList);
 		
 	}
@@ -51,5 +56,27 @@ public class CommunityController {
 	public List<Community> findAll() {
 		return this.communityService.findAll();
 	}
+	
+	public void saveCommunity() {
+	this.communityService.saveCommunity(this.community);
+	updateCommunityList();
+	this.community = new Community();
+	}
 
+
+	public void updateCommunityList() {
+		this.sourceCommunityList = findAll();
+	}
+	
+	public void saveCommunityAndBindToGroup() {
+		this.community.setCommunityGroup(new CommunityGroup());
+		this.community.getCommunityGroup().setId(Long.valueOf(comGroupId));
+		this.communityService.saveCommunity(this.community);
+		this.community = new Community();
+		updateCommunityList();
+	}
+	public void deleteCommunity(Long id) {
+		this.communityService.deleteCommunity(id);
+		updateCommunityList();
+	}
 }

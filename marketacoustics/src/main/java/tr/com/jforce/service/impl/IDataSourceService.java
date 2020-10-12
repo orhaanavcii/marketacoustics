@@ -10,10 +10,10 @@ import tr.com.jforce.repository.DataSourceRepository;
 import tr.com.jforce.service.DataSourceService;
 
 @Service
-public class IDataSourceService implements DataSourceService{
-	
+public class IDataSourceService implements DataSourceService {
+
 	private final DataSourceRepository dataSourceRepository;
-	
+
 	@Autowired
 	public IDataSourceService(DataSourceRepository dataSourceRepository) {
 		this.dataSourceRepository = dataSourceRepository;
@@ -22,6 +22,16 @@ public class IDataSourceService implements DataSourceService{
 	@Override
 	public List<DataSource> findAll() {
 		return this.dataSourceRepository.findAll();
+	}
+
+	@Override
+	public DataSource saveDataSource(DataSource dataSource) {
+		return this.dataSourceRepository.save(dataSource);
+	}
+
+	@Override
+	public void deleteDataSource(Long id) {
+		this.dataSourceRepository.deleteById(id);
 	}
 
 }

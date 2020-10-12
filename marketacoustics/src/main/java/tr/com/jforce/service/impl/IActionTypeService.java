@@ -25,4 +25,16 @@ public class IActionTypeService implements ActionTypeService {
 		return this.actionTypeRepository.findAll();
 	}
 
+	@Override
+	public ActionType saveActionType(ActionType actionType) {
+		return this.actionTypeRepository.save(actionType);
+	}
+
+	@Override
+	public void deleteActionType(Long id) {
+
+		this.actionTypeRepository.deleteById(id);
+		
+	}
+
 }

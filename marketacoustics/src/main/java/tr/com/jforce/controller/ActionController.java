@@ -3,7 +3,9 @@ package tr.com.jforce.controller;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -48,6 +50,13 @@ public class ActionController {
 		this.action = this.actionService.addAction(this.action);
 		this.actionList = findAll();
 		this.isDisabled = Boolean.TRUE;
+		throwSuccessMessage();
+	}
+	
+	public void throwSuccessMessage() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage("mainSuccess",
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Message : The registration has been successfully added."));
 	}
 
 	public DataSource getDataSource() {
@@ -61,6 +70,8 @@ public class ActionController {
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+	
+	
 
 	public List<Action> getActionList() {
 		return actionList;

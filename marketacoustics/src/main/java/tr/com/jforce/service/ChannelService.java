@@ -10,5 +10,7 @@ import tr.com.jforce.entity.Channel;
 public interface ChannelService {
 	
 	List<Channel> findAll();
+	Channel saveChannel(Channel channel);
+	void deleteChannel(Long id);
 
 }

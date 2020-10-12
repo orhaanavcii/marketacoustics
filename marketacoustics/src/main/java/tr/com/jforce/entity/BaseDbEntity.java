@@ -8,8 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 @MappedSuperclass
 public class BaseDbEntity implements Serializable {
 	

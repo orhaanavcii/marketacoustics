@@ -1,0 +1,449 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:o="http://omnifaces.org/ui" template="../content/template.xhtml"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<ui:define name="content">
+		<p:tabView>
+			<p:ajax event="tabChange" 
+			update="communityGroupForm communityForm dataDictionaryForm channelGroupForm channelForm dataSourceForm dataSourceBindForm" />
+
+
+
+			<p:tab title="Community Catalog" id="communityCatalog">
+				<h:form id="communityGroupForm">
+
+					<p:panel id="communityGroupPanel"
+						header="Community Group Managment" toggleable="false"
+						closable="false" toggleSpeed="500" closeSpeed="500"
+						widgetVar="panel" style="margin-bottom:20px">
+
+						<h:panelGrid columns="3" width="%100;" cellpadding="10">
+
+
+							<h:outputLabel style="font-weight:bold;">Community Group Name :</h:outputLabel>
+							<p:inputText
+								value="#{communityGroupController.communityGroup.communityGroupName}" />
+							<p:commandButton value="Save"
+								action="#{communityGroupController.save()}"
+								update="communityGroupForm" />
+
+						</h:panelGrid>
+
+						<p:dataTable paginator="true" rows="10" id="communityGroupTable"
+							var="communityGroup"
+							value="#{communityGroupController.communityGroupList}"
+							style="margin-top:10px;">
+							<p:column headerText="Community Group Name">
+								<p:outputLabel value="#{communityGroup.communityGroupName}" />
+
+
+							</p:column>
+							<p:column headerText="Actions">
+								<p:commandButton update="communityGroupTable" value="Delete"
+									action="#{communityGroupController.delete(communityGroup.id)}"
+									icon="pi pi-times" />
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+
+				</h:form>
+
+				<h:form id="communityForm">
+					<p:panel id="communityPanel" header="Community Managment"
+						toggleable="false" closable="false" toggleSpeed="500"
+						closeSpeed="500" widgetVar="panel" style="margin-bottom:20px">
+
+						<h:panelGrid columns="6" width="%100;" cellpadding="10">
+
+
+							<h:outputLabel style="font-weight:bold;">Community Name :</h:outputLabel>
+							<p:inputText
+								value="#{communityController.community.communityCode}">
+								<p:ajax event="focus" update="communityGroupSelectMenu" />
+							</p:inputText>
+
+							<h:outputLabel style="font-weight:bold;">Bind Community To Community Group -> </h:outputLabel>
+
+							<p:selectOneMenu id="communityGroupSelectMenu"
+								label="Community Groups"
+								value="#{communityController.comGroupId}" style="width:150px"
+								required="true">
+								<f:selectItem itemLabel="Community Group" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{communityGroupController.communityGroupList}"
+									var="communityG" itemValue="#{communityG.id}"
+									itemLabel="#{communityG.communityGroupName}" />
+							</p:selectOneMenu>
+
+
+							<p:commandButton value="Save"
+								action="#{communityController.saveCommunityAndBindToGroup()}"
+								update="communityForm" />
+
+						</h:panelGrid>
+
+
+						<p:dataTable paginator="true" rows="10" id="communityTable"
+							var="community"
+							value="#{communityController.sourceCommunityList}"
+							style="margin-top:10px;">
+							<p:column headerText="Community Name">
+								<p:outputLabel value="#{community.communityCode}" />
+							</p:column>
+							<p:column headerText="Community Group">
+								<p:outputLabel
+									value="#{community.communityGroup.communityGroupName}" />
+							</p:column>
+							<p:column headerText="Action">
+								<p:commandButton update="communityTable" value="Delete"
+									action="#{communityController.deleteCommunity(community.id)}"
+									icon="pi pi-times" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panel>
+				</h:form>
+			</p:tab>
+
+			<p:tab title="Data Dictionary" id="dataDictionary">
+				<h:form id="dataDictionaryForm">
+
+					<p:panel id="dataDictionaryPanel"
+						header="Data Dictionary Managment" toggleable="false"
+						closable="false" toggleSpeed="500" closeSpeed="500"
+						widgetVar="panel" style="margin-bottom:20px">
+
+						<h:panelGrid columns="4" width="%100;" cellpadding="10">
+
+
+							<h:outputLabel style="font-weight:bold;">Field Name :</h:outputLabel>
+							<p:inputText
+								value="#{dataDictionaryController.dataDictionary.fieldName}" />
+								
+							<h:outputLabel style="font-weight:bold;">Field Description :</h:outputLabel>
+							<p:inputText
+								value="#{dataDictionaryController.dataDictionary.fieldDescription}" />
+								
+								<h:outputLabel style="font-weight:bold;">Field Type :</h:outputLabel>
+								
+								<p:selectOneMenu id="dataDicSelect"
+								label="Field Type"
+								value="#{dataDictionaryController.dataDictionary.fieldType}" style="width:150px"
+								required="true">
+								<f:selectItem itemLabel="Field Type" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{dataDictionaryController.fieldTypeList}"
+									var="type" itemValue="#{type}"
+									itemLabel="#{type}" />
+							</p:selectOneMenu>
+								
+								<h:outputLabel style="font-weight:bold;">Field Lenght :</h:outputLabel>
+							<p:inputNumber  value="#{dataDictionaryController.dataDictionary.fieldLenght}"/>
+							<p:commandButton value="Save"
+								action="#{dataDictionaryController.saveDataDictionary()}"
+								update="dataDictionaryForm" />
+
+						</h:panelGrid>
+
+						<p:dataTable paginator="true" rows="10" id="dataDictionaryTable"
+							var="dataD"
+							value="#{dataDictionaryController.dataDictionaryList}"
+							style="margin-top:10px;">
+							<p:column headerText="Field Name">
+								<p:outputLabel value="#{dataD.fieldName}" />
+							</p:column>
+							<p:column headerText="Field Description">
+								<p:outputLabel value="#{dataD.fieldDescription}" />
+							</p:column>
+							<p:column headerText="Field Type">
+								<p:outputLabel value="#{dataD.fieldType}" />
+							</p:column>
+							<p:column headerText="Field Lenght">
+								<p:outputLabel value="#{dataD.fieldLenght}" />
+							</p:column>
+							<p:column headerText="Actions">
+								<p:commandButton update="dataDictionaryTable" value="Delete"
+									action="#{dataDictionaryController.deleteDataDictionary(dataD.id)}"
+									icon="pi pi-times" />
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+
+				</h:form>
+			</p:tab>
+
+			<p:tab title="Channel Catalog" id="channelCatalog">
+
+
+				<h:form id="channelGroupForm">
+
+					<p:panel id="channelGroupPanel" header="Channel Group Managment"
+						toggleable="false" closable="false" toggleSpeed="500"
+						closeSpeed="500" widgetVar="panel" style="margin-bottom:20px">
+
+						<h:panelGrid columns="3" width="%100;" cellpadding="10">
+
+
+							<h:outputLabel style="font-weight:bold;">Channel Group Name :</h:outputLabel>
+							<p:inputText
+								value="#{channelGroupController.channelGroup.channelGroupName}" />
+							<p:commandButton value="Save"
+								action="#{channelGroupController.saveChannelGroup()}"
+								update="channelGroupPanel" />
+
+						</h:panelGrid>
+
+						<p:dataTable paginator="true" rows="10" id="channelGroupTable"
+							var="channelGroup"
+							value="#{channelGroupController.channelGroupList}"
+							style="margin-top:10px;">
+							<p:column headerText="Channel Group Name">
+								<p:outputLabel value="#{channelGroup.channelGroupName}" />
+
+
+							</p:column>
+							<p:column headerText="Actions">
+								<p:commandButton update="channelGroupTable" value="Delete"
+									action="#{channelGroupController.deleteChannelGroup(channelGroup.id)}"
+									icon="pi pi-times" />
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+
+				</h:form>
+
+				<h:form id="channelForm">
+					<p:panel id="channelFormPanel" header="Channel Managment"
+						toggleable="false" closable="false" toggleSpeed="500"
+						closeSpeed="500" widgetVar="panel" style="margin-bottom:20px">
+
+						<h:panelGrid columns="8" width="%100;" cellpadding="10">
+
+
+							<h:outputLabel style="font-weight:bold;">Channel Name :</h:outputLabel>
+							<p:inputText value="#{channelController.channel.channelName}">
+								<p:ajax event="focus" update="channelGroupSelectMenu" />
+							</p:inputText>
+
+							<h:outputLabel style="font-weight:bold;">Bind Channel To Channel Group -> </h:outputLabel>
+
+							<p:selectOneMenu id="channelGroupSelectMenu"
+								label="Channel Groups"
+								value="#{channelController.channelGroupId}" style="width:150px"
+								required="true">
+								<f:selectItem itemLabel="Channel Group" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{channelGroupController.channelGroupList}"
+									var="channelG" itemValue="#{channelG.id}"
+									itemLabel="#{channelG.channelGroupName}" />
+							</p:selectOneMenu>
+							<p:outputLabel value="Channel Description" />
+							<p:inputTextarea
+								value="#{channelController.channel.channelDescription}" />
+
+
+							<p:commandButton value="Save"
+								action="#{channelController.saveChannelAndBindToGroup()}"
+								update="channelForm channelTable" />
+
+						</h:panelGrid>
+
+
+						<p:dataTable paginator="true" rows="10" id="channelTable"
+							var="channel" value="#{channelController.sourceChannelList}"
+							style="margin-top:10px;">
+							<p:column headerText="Channel Name">
+								<p:outputLabel value="#{channel.channelName}" />
+							</p:column>
+							<p:column headerText="Channel Group">
+								<p:outputLabel value="#{channel.channelGroups.channelGroupName}" />
+							</p:column>
+							<p:column headerText="Channel Description">
+								<p:outputLabel value="#{channel.channelDescription}" />
+							</p:column>
+							<p:column headerText="Action">
+								<p:commandButton update="channelTable" value="Delete"
+									action="#{channelController.deleteChannel(channel.id)}"
+									icon="pi pi-times" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panel>
+				</h:form>
+
+			</p:tab>
+
+			<p:tab title="Data Sources" id="dataSourceManagement">
+
+				<h:form id="dataSourceForm">
+
+					<p:panel id="dataSourcePanel"
+						header="DataSource Managment" toggleable="false"
+						closable="false" toggleSpeed="500" closeSpeed="500"
+						widgetVar="panel" style="margin-bottom:20px">
+					<p:autoUpdate />
+						<h:panelGrid columns="3" width="%100;" cellpadding="10">
+
+
+							<h:outputLabel style="font-weight:bold;">DataSource Name :</h:outputLabel>
+							<p:inputText
+								value="#{dataSourceController.dataSource.targetAudianceDataSource}" />
+							<p:commandButton value="Save"
+								action="#{dataSourceController.saveDataSource()}"
+								update="dataSourceForm"/> 
+								
+								
+
+						</h:panelGrid>
+
+						<p:dataTable paginator="true" rows="10" id="dataSourceTable"
+							var="dataSource1"
+							value="#{dataSourceController.dataSourceList}"
+							style="margin-top:10px;">
+							<p:column headerText="DataSource Name">
+								<p:outputLabel value="#{dataSource1.targetAudianceDataSource}" />
+
+
+							</p:column>
+							<p:column headerText="Actions">
+								<p:commandButton update="dataSourceTable" value="Delete"
+									action="#{dataSourceController.deleteDataSource(dataSource1.id)}"
+									icon="pi pi-times" />
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+
+				</h:form>
+
+				<h:form id="dataSourceBindForm">
+				<p:autoUpdate />
+					<p:panel id="dataSourceBindPanel"
+						header="DataSource Bind Managment" toggleable="false"
+						closable="false" toggleSpeed="500" closeSpeed="500"
+						widgetVar="panel" style="margin-bottom:20px">
+
+						<h:panelGrid columns="5" width="%100;" cellpadding="10">
+
+
+							<h:outputLabel style="font-weight:bold;">DataSource Name :
+							
+							</h:outputLabel>
+							<p:selectOneMenu id="dataSourceBindMenu"
+								label="Select DataSource"
+								value="#{dataSourceCommunityC.targetAudianceDataSourceId}" style="width:150px"
+								required="true">
+								<f:selectItem itemLabel="DataSource List" itemValue=""
+									noSelectionOption="true" />
+									
+								<f:selectItems
+									value="#{dataSourceController.dataSourceList}"
+									var="dataSource1" itemValue="#{dataSource1.id}"
+									itemLabel="#{dataSource1.targetAudianceDataSource}" />
+							</p:selectOneMenu>
+							<h:outputLabel style="font-weight:bold;">Community Name :</h:outputLabel>
+							<p:selectManyMenu converter="#{selectManyMenuConverter}" id="communityListMenu1"
+								value="#{dataSourceCommunityC.communityIdList}"
+								filter="true" filterMatchMode="contains" showCheckbox="true"
+								style="width:180px;">
+								<f:selectItems
+									value="#{communityController.sourceCommunityList}" var="c"
+									itemLabel="#{c.communityCode}" itemValue="#{c}" />
+								<p:column>
+									<h:outputText value="#{c.communityCode}" />
+								</p:column>
+							</p:selectManyMenu>
+
+							<p:commandButton value="Save"
+								action="#{dataSourceCommunityC.addDataSourceCommunity()}"
+								update="dataSourceBindForm" />
+
+						</h:panelGrid>
+
+						<p:dataTable paginator="true" rows="10" id="dataSourceCommunityTable"
+							var="dataSource1"
+							value="#{dataSourceCommunityC.dataSourceCommunityList}"
+							style="margin-top:10px;">
+							<p:column headerText="DataSource Name">
+								<p:outputLabel value="#{dataSource1.targetAudianceDataSource.targetAudianceDataSource}" />
+							</p:column>
+							<p:column headerText="Binded Communities">
+							
+								<ui:repeat value="#{dataSource1.communityList}" var="community">
+										<h:outputText value="#{community.communityCode} " />
+									</ui:repeat>
+
+							</p:column>
+							<p:column headerText="Actions">
+								<p:commandButton update="dataSourceCommunityTable" value="Delete"
+									action="#{dataSourceCommunityC.deleteDataSourceCommunity(dataSource1.id)}"
+									icon="pi pi-times" />
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+
+				</h:form>
+			</p:tab>
+
+			<p:tab title="Action Types" id="actionTypes">
+
+				<h:form id="actionTypesForm">
+					<p:autoUpdate />
+					<p:panel id="actionTypesPanel"
+						header="Action Type Managment" toggleable="false"
+						closable="false" toggleSpeed="500" closeSpeed="500"
+						widgetVar="panel" style="margin-bottom:20px">
+
+						<h:panelGrid columns="3" width="%100;" cellpadding="10">
+
+
+							<h:outputLabel style="font-weight:bold;">Action Type Name :</h:outputLabel>
+							<p:inputText
+								value="#{actionTypeController.actionType.actionType}" />
+							<p:commandButton value="Save"
+								action="#{actionTypeController.saveActionType()}"
+								 />
+
+						</h:panelGrid>
+
+						<p:dataTable paginator="true" rows="10" id="actionTypeTable"
+							var="actionType"
+							value="#{actionTypeController.actionTypeList}"
+							style="margin-top:10px;">
+							<p:column headerText="Action Type Name">
+								<p:outputLabel value="#{actionType.actionType}" />
+							</p:column>
+							<p:column headerText="Actions">
+								<p:commandButton  value="Delete"
+									action="#{actionTypeController.deleteActionType(actionType.id)}"
+									icon="pi pi-times" />
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+					
+					
+				</h:form>
+			</p:tab>
+
+
+		</p:tabView>
+	</ui:define>
+</ui:composition>
+

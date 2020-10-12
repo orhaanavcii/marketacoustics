@@ -24,4 +24,14 @@ public class ICommunityService implements CommunityService {
 		return this.communityRepository.findAll();
 	}
 
+	@Override
+	public Community saveCommunity(Community community) {
+		return this.communityRepository.save(community);
+	}
+
+	@Override
+	public void deleteCommunity(Long id) {
+		this.communityRepository.deleteById(id);
+	}
+
 }

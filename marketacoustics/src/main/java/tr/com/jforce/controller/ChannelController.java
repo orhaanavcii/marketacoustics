@@ -18,7 +18,10 @@ import lombok.Setter;
 import tr.com.jforce.entity.Action;
 import tr.com.jforce.entity.ActionChannels;
 import tr.com.jforce.entity.Channel;
+import tr.com.jforce.entity.ChannelGroups;
+import tr.com.jforce.entity.Community;
 import tr.com.jforce.service.ActionChannelsService;
+import tr.com.jforce.service.ChannelGroupService;
 import tr.com.jforce.service.ChannelService;
 
 @Scope("view")
@@ -27,27 +30,40 @@ public class ChannelController {
 
 	private final ChannelService channelService;
 	private final ActionChannelsService actionChannelsService;
+
 	private String message = "You can only use one channel per channel group !";
 	private DualListModel<Channel> channelDualList;
 	private List<Channel> sourceChannelList;
 	private ActionChannels actionChannels;
+	private Boolean flag;
+	private Boolean isDisabled;
+	private Channel channel;
+	private String channelGroupId;
+	
 
 	@Autowired
 	public ChannelController(ChannelService channelService, ActionChannelsService actionChannelsService) {
 		this.channelService = channelService;
 		this.actionChannelsService = actionChannelsService;
+
 	}
 
 	@PostConstruct
 	public void init() {
-
+		
+		this.channel = new Channel();
 		findAll();
 		this.channelDualList = new DualListModel<Channel>(this.sourceChannelList, new ArrayList<Channel>());
 
 	}
 
+	public void updateDualList(List<Channel> sourceList, List<Channel> targetList) {
+		this.channelDualList = new DualListModel<Channel>(sourceList, targetList);
+	}
+
 	public void findAll() {
 		this.sourceChannelList = this.channelService.findAll();
+		updateDualList(sourceChannelList, new ArrayList<Channel>());
 
 	}
 
@@ -57,34 +73,17 @@ public class ChannelController {
 			this.actionChannels.setAction(action);
 			this.actionChannels.setChannelList(this.channelDualList.getTarget());
 			this.actionChannelsService.saveAC(actionChannels);
+			this.isDisabled = Boolean.TRUE;
 
 		} else {
 			throwMessage();
-	
+			findAll();
+
 		}
 	}
 
-//	public void handleTransfer(TransferEvent event) {
-//		
-//        List<Channel> transferChannels = (List<Channel>) event.getItems();
-//        Channel tempChannel = new Channel();
-//        
-//        if(event.isAdd()) {
-//        	if(this.channelDualList.getTarget().size() >= 2) {
-//        	transferChannels.forEach(t -> {
-//        		this.channelDualList.getTarget().forEach(x -> {
-//        			if(x.getChannelGroups().getId() == t.getChannelGroups().getId()) {
-//        				throwMessage();
-//        			}
-//        		});
-//        	});
-//        	}
-//        }
-//    }
-	
-	Boolean flag = Boolean.TRUE;
 	public Boolean checkChannelGroup() {
-		
+		this.flag = Boolean.TRUE;
 		this.channelDualList.getTarget().forEach(x -> {
 			this.channelDualList.getTarget().forEach(t -> {
 				if (x != t) {
@@ -97,21 +96,34 @@ public class ChannelController {
 
 		return flag;
 	}
-	
 
 	public void throwMessage() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.addMessage("channelMessage",
 				new FacesMessage(FacesMessage.SEVERITY_WARN, "Attention", "Message :" + this.message));
 	}
-	
-	
+
 	public void transferCheck() {
+
+		if (!checkChannelGroup()) {
+			throwMessage();
+		}
+
+	}
+	
+	public void saveChannelAndBindToGroup() {
+		ChannelGroups channelGroups = new ChannelGroups();
+		channelGroups.setId(Long.valueOf(channelGroupId));
+		channel.setChannelGroups(channelGroups);
+		this.channelService.saveChannel(channel);
+		this.channel = new Channel();
 		
-			if(!checkChannelGroup()) {
-				throwMessage();
-			}
-		
+		findAll();
+	}
+	
+	public void deleteChannel(Long id) {
+		this.channelService.deleteChannel(id);
+		findAll();
 	}
 
 	public String getMessage() {
@@ -153,5 +165,39 @@ public class ChannelController {
 	public ActionChannelsService getActionChannelsService() {
 		return actionChannelsService;
 	}
+
+	public Boolean getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Boolean flag) {
+		this.flag = flag;
+	}
+
+	public Boolean getIsDisabled() {
+		return isDisabled;
+	}
+
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+
+	public Channel getChannel() {
+		return channel;
+	}
+
+	public void setChannel(Channel channel) {
+		this.channel = channel;
+	}
+
+	public String getChannelGroupId() {
+		return channelGroupId;
+	}
+
+	public void setChannelGroupId(String channelGroupId) {
+		this.channelGroupId = channelGroupId;
+	}
+
+	
 
 }

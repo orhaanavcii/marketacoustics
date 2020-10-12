@@ -23,4 +23,5 @@ public class ActionType extends BaseDbEntity {
 	
 	@Column(name = "actionType")
 	private String actionType;
+	
 }

@@ -60,6 +60,7 @@ public class FrequencyController {
 	}
 	
 	public void save(Action action) {
+		this.frequencyList = new ArrayList<Frequency>();
 		this.frequency.setAction(action);
 		this.frequencyList.add(this.frequency);
 		this.isDisabled = Boolean.TRUE;

@@ -10,5 +10,7 @@ import tr.com.jforce.entity.Community;
 public interface CommunityService {
 	
 	List<Community> findAll();
+	Community saveCommunity(Community community);
+	void deleteCommunity(Long id);
 
 }

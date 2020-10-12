@@ -28,10 +28,10 @@ public class CommunityGroup extends BaseDbEntity {
 	
 	@Column(name = "communityGroupName")
 	private String communityGroupName;
-	
-	@JoinColumn(name = "communityGroupId")
-	@OneToMany(fetch = FetchType.LAZY)
-	private List<Community> communityGroup;
+//	
+//	@JoinColumn(name = "communityGroupId")
+//	@OneToMany(fetch = FetchType.LAZY)
+//	private List<Community> communityGroup;
 	
 
 }

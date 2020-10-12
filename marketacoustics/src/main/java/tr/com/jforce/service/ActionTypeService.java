@@ -12,7 +12,8 @@ import tr.com.jforce.entity.ActionType;
 public interface ActionTypeService {
 	
 	List<ActionType> findAll();
-	
+	ActionType saveActionType(ActionType actionType);
+	void deleteActionType(Long id);
 	
 
 }

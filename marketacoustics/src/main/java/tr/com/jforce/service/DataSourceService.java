@@ -10,5 +10,7 @@ import tr.com.jforce.entity.DataSource;
 public interface DataSourceService {
 	
 	List<DataSource> findAll();
+	DataSource saveDataSource(DataSource dataSource);
+	void deleteDataSource(Long id);
 
 }
