@@ -1,4 +1,4 @@
-package tr.com.jforce.service.impl;
+package tr.com.jforce.controller;
 
 import java.util.ArrayList;
 import java.util.List;

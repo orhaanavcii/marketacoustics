@@ -43,7 +43,7 @@ public class ActionTypeController {
 	public void saveActionType() {
 		this.actionTypeService.saveActionType(actionType);
 		findAll();
-		this.actionType.setActionType("");
+		this.actionType = new ActionType();
 	}
 	
 	public void deleteActionType(Long id) {

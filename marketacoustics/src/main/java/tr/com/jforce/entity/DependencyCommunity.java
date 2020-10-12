@@ -39,5 +39,8 @@ public class DependencyCommunity extends BaseDbEntity {
 	
 	@Column(name = "mustBeIn")
 	private Boolean mustBeIn;
+	
+	@Column(name = "andOr")
+	private Boolean andOr;
 
 }

@@ -442,6 +442,55 @@
 				</h:form>
 			</p:tab>
 
+<p:tab title="Persona" id="persona">
+
+				<h:form id="personaForm">
+				<p:autoUpdate/>
+					<p:autoUpdate />
+					<p:panel id="personaPanel"
+						header="Persona Managment" toggleable="false"
+						closable="false" toggleSpeed="500" closeSpeed="500"
+						widgetVar="panel" style="margin-bottom:20px">
+
+						<h:panelGrid columns="5" width="%100;" cellpadding="10">
+
+
+							<h:outputLabel style="font-weight:bold;">Persona Code :</h:outputLabel>
+							<p:inputText
+								value="#{personaController.persona.personaCode}" />
+								
+								<h:outputLabel style="font-weight:bold;">Persona Defination :</h:outputLabel>
+							<p:inputTextarea
+								value="#{personaController.persona.personaDefination}" />
+								
+							<p:commandButton value="Save"
+								action="#{personaController.savePersona()}"
+								 />
+
+						</h:panelGrid>
+
+						<p:dataTable paginator="true" rows="10" id="personaTable"
+							var="persona"
+							value="#{personaController.personaList}"
+							style="margin-top:10px;">
+							<p:column headerText="Persona Code">
+								<p:outputLabel value="#{persona.personaCode}" />
+							</p:column>
+							<p:column headerText="Persona Defination">
+								<p:outputLabel value="#{persona.personaDefination}" />
+							</p:column>
+							<p:column headerText="Actions">
+								<p:commandButton  value="Delete"
+									action="#{personaController.deletePersona(persona.id)}"
+									icon="pi pi-times" />
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+					
+					
+				</h:form>
+			</p:tab>
 
 		</p:tabView>
 	</ui:define>

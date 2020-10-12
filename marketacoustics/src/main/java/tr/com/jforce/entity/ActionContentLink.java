@@ -29,8 +29,9 @@ public class ActionContentLink extends BaseDbEntity {
 	@Column(name = "ageGroup")
 	private String ageGroup;
 
-	@Column(name = "persona")
-	private String persona;
+	@JoinColumn(name = "personaId")
+	@OneToOne(fetch = FetchType.LAZY, optional = true)
+	private Persona persona;
 
 	@Column(name = "lifeStage")
 	private String lifeStage;

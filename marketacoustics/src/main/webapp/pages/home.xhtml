@@ -17,7 +17,7 @@
 
 		<p:tabView>
 			<p:ajax event="tabChange"
-				update="frequency main community channel dependencies dependenciesV2" />
+				update="frequency main community channel  dependenciesV2" />
 			<p:tab title="Main" id="mainTab">
 
 				<h:form id="main">
@@ -279,28 +279,95 @@
 			</p:tab>
 
 			<p:tab title="Dependencies">
-				<h:form id="dependencies">
+				<h:form id="dependenciesV2">
 					<div class="ui-g">
-						<div class="ui-g-12">
-							<p:selectBooleanCheckbox id="chbx2"
-								value="#{testController.checkStatus}" />
-							<p:outputLabel style="margin-left:5px;"
-								value="Tanımlanan frekans içerisinde yalniz bir kez gönderilebilir." />
+						<div class="ui-g-8 ui-g-offset-4">
+							<h2>Action Filters</h2>
 						</div>
 					</div>
+					<div class="ui-g">
+						<div class="ui-g-3 ui-g-offset-1">
+							<h3>Raw Data / Communities</h3>
+						</div>
+						<div class="ui-g-4 ui-g-offset-4">
+							<p:outputLabel style="margin-right:15px;" value="Rule Filter" />
+							<p:inputText style="margin-right:5px;" value="#{dependenciesController.ruleFilterName}"/>
+							<p:commandButton value="Save" action="#{dependenciesController.saveDependencies(actionController.action)}" update="ruleTable dependTable"/>
+						</div>
+						<div class="ui-g-3"> </div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-3 ui-g-offset-1">
+							<p:selectManyMenu converter="#{selectManyMenuConverterForDbEntity}" id="rawCommunity"
+								value="#{dependenciesController.targetSourceList}"
+								filter="true" filterMatchMode="contains" showCheckbox="true"
+								style="width:180px;">
+								<f:selectItems
+									value="#{dependenciesController.mainSourceList}" var="c"
+									itemLabel="#{c.getClass().getName() == 'tr.com.jforce.entity.DataDictionary' ? c.fieldName : c.communityCode }" itemValue="#{c}" />
+								<p:column>
+									<h:outputText value="#{c.communityCode}" />
+								</p:column>
+							</p:selectManyMenu>
 
-					<div class="ui-g" style="margin-top: 30px;">
 
-						<p:dataTable var="name" value="#{testController.names}">
-							<p:column headerText="Campaign Code">
-								<h:outputText value="#{name}" />
-							</p:column>
-							<p:column headerText="Dependent Action">
-								Policy is active for 30 days
-							</p:column>
+						</div>
+						<div class="ui-g-3">
 
-						</p:dataTable>
+							<p:selectOneMenu value="#{dependenciesController.isAndOr}"
+								style="width:150px">
+								<f:selectItem itemLabel="AND / OR" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{dependenciesController.andOr}" />
+							</p:selectOneMenu>
 
+							<p:commandButton value="Push" update="dependenciesV2 dependTable"
+								style="margin-right:20px; margin-top:10px; margin-bottom:10px; width:100px;"
+								title="Icon Only" icon="pi pi-arrow-right" action="#{dependenciesController.pushData(actionController.action)}"> 
+							</p:commandButton>
+
+							<p:selectOneMenu value="#{dependenciesController.isInOut}"
+								style="width:150px">
+								<f:selectItem itemLabel="IN / OUT" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{dependenciesController.inOut}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-5">
+
+							<p:dataTable id="dependTable" var="x"
+								value="#{dependenciesController.tableSourceList}"
+								style="margin-top:10px;">
+								<p:column headerText="AND / OR">
+									<p:outputLabel value="#{x.andOr == true ? 'AND' : 'OR'}" />
+								</p:column>
+								<p:column headerText="IN / OUT">
+									<p:outputLabel value="#{x.mustBeIn == true ? 'IN' : 'NOT IN'}" />
+								</p:column>
+								<p:column headerText="Rule Community">
+									<p:outputLabel value="#{x.getClass().getName() == 'tr.com.jforce.entity.DependencyRawData' ? x.dataDictionary.fieldName : x.community.communityCode}" />
+								</p:column>
+							</p:dataTable>
+
+						</div>
+
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+						
+							<p:dataTable id="ruleTable" var="x"
+								value="#{dependenciesController.dependenciesList}"
+								style="margin-top:10px;">
+								<p:column headerText="Rule Filter Name">
+									<p:outputLabel value="#{x.ruleFilterName}" />
+								</p:column>
+								<p:column headerText="Rule">
+									<p:outputLabel value="#{x.dependencyNotes}" />
+								</p:column>
+							</p:dataTable>
+						
+						</div>
+						
 					</div>
 
 				</h:form>
@@ -505,29 +572,30 @@
 
 			<p:tab title="Content">
 				<h:form id="content">
+				<p:autoUpdate />
 					<div class="ui-g">
 						<div class="ui-g-3">
-							<h:outputLabel value="Channel :" style="font-weight:bold;" />
+							<h:outputLabel value="Channel Group :" style="font-weight:bold;" />
 						</div>
 						<div class="ui-g-3">
-							<p:selectOneMenu value="#{testController.a}"
+							<p:selectOneMenu value="#{actionContentLinkController.channelGroup.id}"
 								style="width:100px; margin-right:10px;">
 								<p:ajax listener="#{testController.gettesty}" />
-								<f:selectItem itemLabel="Select Channel..." itemValue="#{name}"
+								<f:selectItem itemLabel="Select Channel..." itemValue=""
 									noSelectionOption="true" />
-								<f:selectItems value="#{testController.names}" var="name" />
+								<f:selectItems value="#{channelGroupController.channelGroupList}" var="cG" itemLabel="#{cG.channelGroupName}" itemValue="#{cG.id}"/>
 							</p:selectOneMenu>
 						</div>
 						<div class="ui-g-3">
 							<h:outputLabel value="Persona :" style="font-weight:bold;" />
 						</div>
 						<div class="ui-g-3">
-							<p:selectOneMenu value="#{testController.a}"
+							<p:selectOneMenu value="#{actionContentLinkController.persona.id}"
 								style="width:100px; margin-right:10px;">
-								<p:ajax listener="#{testController.gettesty}" />
-								<f:selectItem itemLabel="Select Persona..." itemValue="#{name}"
+							
+								<f:selectItem itemLabel="Select Persona..." itemValue=""
 									noSelectionOption="true" />
-								<f:selectItems value="#{testController.names}" var="name" />
+								<f:selectItems value="#{personaController.personaList}" var="persona" itemValue="#{persona.id}" itemLabel="#{persona.personaCode}" />
 							</p:selectOneMenu>
 						</div>
 					</div>
@@ -537,24 +605,23 @@
 							<h:outputLabel value="Age Group :" style="font-weight:bold;" />
 						</div>
 						<div class="ui-g-3">
-							<p:selectOneMenu value="#{testController.a}"
+							<p:selectOneMenu value="#{actionContentLinkController.actionContentLink.ageGroup}"
 								style="width:100px; margin-right:10px;">
-								<p:ajax listener="#{testController.gettesty}" />
-								<f:selectItem itemLabel="Select..." itemValue="#{name}"
+				
+								<f:selectItem itemLabel="Select Age Group..." itemValue=""
 									noSelectionOption="true" />
-								<f:selectItems value="#{testController.names}" var="name" />
+								<f:selectItems value="#{actionContentLinkController.ageGroupList}" var="ageG" itemValue="#{ageG}" itemLabel="#{ageG}" />
 							</p:selectOneMenu>
 						</div>
 						<div class="ui-g-3">
 							<h:outputLabel value="Life Stage :" style="font-weight:bold;" />
 						</div>
 						<div class="ui-g-3">
-							<p:selectOneMenu value="#{testController.a}"
+							<p:selectOneMenu value="#{actionContentLinkController.actionContentLink.lifeStage}"
 								style="width:100px; margin-right:10px;">
-								<p:ajax listener="#{testController.gettesty}" />
-								<f:selectItem itemLabel="Select..." itemValue="#{name}"
+								<f:selectItem itemLabel="Select..." itemValue=""
 									noSelectionOption="true" />
-								<f:selectItems value="#{testController.names}" var="name" />
+								<f:selectItems value="#{actionContentLinkController.lifeStage}" var="lS" itemLabel="#{lS}" itemValue="#{lS}" />
 							</p:selectOneMenu>
 						</div>
 					</div>
@@ -563,7 +630,7 @@
 							<h:outputLabel value="Content Link :" style="font-weight:bold;" />
 						</div>
 						<div class="ui-g-3">
-							<p:inputText />
+							<p:inputText value="#{actionContentLinkController.actionContentLink.contentLink}"/>
 						</div>
 					</div>
 					<div class="ui-g">
@@ -578,12 +645,12 @@
 						</div>
 						<div class="ui-g-4"></div>
 						<div class="ui-g-4">
-							<p:commandButton value="Preview Content" />
+							<p:commandButton value="Preview Content" action="#{actionContentLinkController.saveActionContentLink(actionController.action)}" disabled="#{actionContentLinkController.isDisabled}" />
 						</div>
 					</div>
 					<div class="ui-g">
 						<div class="ui-g-12">
-							<p:inputTextarea rows="6" cols="105" />
+							<p:inputTextarea rows="6" cols="105" value="#{actionContentLinkController.actionContentLink.basicContent}" />
 						</div>
 					</div>
 					<div class="ui-g">
@@ -595,25 +662,25 @@
 
 					<div class="ui-g">
 						<div class="ui-g-12">
-							<p:dataTable var="name" value="#{testController.names}"
+							<p:dataTable var="acl" value="#{actionContentLinkController.actionContentLinkList}"
 								style="margin-top:10px;">
-								<p:column headerText="Channel">
-								SMS
+								<p:column headerText="Channel Group">
+								<p:outputLabel value="#{acl.channelGroup.channelGroupName}"/>
 							</p:column>
 								<p:column headerText="Persona">
-								ALL
+								<p:outputLabel value="#{acl.persona.personaCode}"/>
 							</p:column>
 								<p:column headerText="Age">
-								Age
+								<p:outputLabel value="#{acl.ageGroup}"/>
 							</p:column>
 								<p:column headerText="Life Stage">
-								ALL
+								<p:outputLabel value="#{acl.lifeStage}"/>
 							</p:column>
 								<p:column headerText="Content Link">
-								Https://.....
+								<p:outputLabel value="#{acl.contentLink}"/>
 							</p:column>
-								<p:column headerText="Preview">
-
+								<p:column headerText="Basic Content">
+								<p:outputLabel value="#{acl.basicContent}"/>
 								</p:column>
 							</p:dataTable>
 						</div>
@@ -621,87 +688,7 @@
 				</h:form>
 			</p:tab>
 
-			<p:tab title="Dependencies V2">
-				<h:form id="dependenciesV2">
-					<div class="ui-g">
-						<div class="ui-g-8 ui-g-offset-4">
-							<h2>Action Filters</h2>
-						</div>
-					</div>
-					<div class="ui-g">
-						<div class="ui-g-3 ui-g-offset-1">
-							<h3>Raw Data / Communities</h3>
-						</div>
-						<div class="ui-g-4 ui-g-offset-2">
-							<p:outputLabel style="margin-right:15px;" value="Rule Filter" />
-							<p:inputText />
-						</div>
-						<div class="ui-g-3"></div>
-					</div>
-					<div class="ui-g">
-						<div class="ui-g-3 ui-g-offset-1">
-							<p:selectManyMenu converter="#{selectManyMenuConverter}" id="rawCommunity"
-								value="#{dependenciesController.targetCommunityList}"
-								filter="true" filterMatchMode="contains" showCheckbox="true"
-								style="width:180px;">
-								<f:selectItems
-									value="#{dependenciesController.sourceCommunityList}" var="c"
-									itemLabel="#{c.communityCode}" itemValue="#{c}" />
-								<p:column>
-									<h:outputText value="#{c.communityCode}" />
-								</p:column>
-							</p:selectManyMenu>
-
-
-						</div>
-						<div class="ui-g-3">
-
-							<p:selectOneMenu value="#{dependenciesController.isAndOr}"
-								style="width:150px">
-								<f:selectItem itemLabel="AND / OR" itemValue=""
-									noSelectionOption="true" />
-								<f:selectItems value="#{dependenciesController.andOr}" />
-							</p:selectOneMenu>
-
-							<p:commandButton value="Push" update="dependenciesV2 dependTable"
-								style="margin-right:20px; margin-top:10px; margin-bottom:10px; width:100px;"
-								title="Icon Only" icon="pi pi-arrow-right" action="#{dependenciesController.pushData()}"> 
-							</p:commandButton>
-
-							<p:selectOneMenu value="#{dependenciesController.isInOut}"
-								style="width:150px">
-								<f:selectItem itemLabel="IN / OUT" itemValue=""
-									noSelectionOption="true" />
-								<f:selectItems value="#{dependenciesController.inOut}" />
-							</p:selectOneMenu>
-						</div>
-						<div class="ui-g-5">
-
-							<p:dataTable id="dependTable" var="datas"
-								value="#{dependenciesController.dependenciesCommunityRawDatas}"
-								style="margin-top:10px;">
-								<p:column headerText="AND / OR">
-									<p:outputLabel value="#{datas.andOr}" />
-								</p:column>
-								<p:column headerText="IN / OUT">
-									<p:outputLabel value="#{datas.inOut}" />
-								</p:column>
-								<p:column headerText="Rule Community">
-									<p:outputLabel value="#{datas.data}" />
-								</p:column>
-							</p:dataTable>
-
-						</div>
-
-					</div>
-					<div class="ui-g">
-						<div class="ui-g-4"></div>
-						<div class="ui-g-4"></div>
-						<div class="ui-g-4"></div>
-					</div>
-
-				</h:form>
-			</p:tab>
+			
 
 		</p:tabView>
 

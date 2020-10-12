@@ -29,6 +29,9 @@ public class Persona  extends BaseDbEntity{
 	@OneToOne(optional = true , fetch = FetchType.LAZY)
 	private JFClient client;
 	
+	@Column(name = "personaCode", unique = true)
+	private String personaCode;
+	
 	@Column(name = "personaDefination")
 	private String personaDefination;
 

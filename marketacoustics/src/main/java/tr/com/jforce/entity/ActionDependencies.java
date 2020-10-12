@@ -33,4 +33,6 @@ public class ActionDependencies extends BaseDbEntity {
 	@Column(name = "dependencyNotes")
 	private String dependencyNotes;
 
+	@Column(name="dependencyFilterName")
+	private String ruleFilterName;
 }
